@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@google/genai": "^1.39.0",
     "@supabase/supabase-js": "^2.93.3",
     "lovable-tagger": "^1.1.13",
     "lucide-react": "^0.563.0",
