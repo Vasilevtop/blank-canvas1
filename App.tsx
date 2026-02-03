@@ -1,26 +1,17 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { UserProfile, HealthMetrics, Gender, ActivityLevel, GoalType } from './types';
 import { ACTIVITY_LABELS, GOAL_LABELS, calculateBMR, calculateWater } from './constants';
-import { getHealthAdvice } from './services/geminiService';
 import { 
   Activity, 
   Droplets, 
   Target, 
   User, 
-  ChevronRight, 
-  Sparkles, 
-  RefreshCw,
   Utensils,
   Palette,
-  Trophy,
   AlertCircle,
-  TrendingDown,
-  ArrowRightLeft,
-  Flame,
   Scale,
   Zap,
   CheckCircle2,
-  Info,
   Leaf,
   Beef
 } from 'lucide-react';
@@ -64,8 +55,6 @@ const App: React.FC = () => {
     };
   });
 
-  const [aiAdvice, setAiAdvice] = useState<any>(null);
-  const [loadingAdvice, setLoadingAdvice] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('fitlife-theme', theme);
@@ -167,12 +156,6 @@ const App: React.FC = () => {
     };
   }, [profile]);
 
-  const handleFetchAdvice = async () => {
-    setLoadingAdvice(true);
-    const advice = await getHealthAdvice(profile, metrics);
-    if (advice) setAiAdvice(advice);
-    setLoadingAdvice(false);
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -519,66 +502,6 @@ const App: React.FC = () => {
             </div>
           </div>
 
-          {/* Gemini AI Advice Card */}
-          <div className={`bg-gradient-to-br ${themeClasses.gradient} p-8 rounded-[2.5rem] shadow-xl border ${themeClasses.borderLight} relative overflow-hidden transition-all duration-500`}>
-            <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none"><Sparkles className="w-40 h-40" /></div>
-            <div className="flex justify-between items-start mb-8">
-              <div>
-                <h3 className={`text-2xl font-black ${themeClasses.textDark} flex items-center gap-3`}><Sparkles className={`w-8 h-8 ${themeClasses.text}`} />ИИ-Рекомендации</h3>
-                <p className={`text-[10px] ${themeClasses.text} font-black opacity-80 uppercase tracking-[0.2em]`}>Ваш план действий</p>
-              </div>
-              <button 
-                onClick={handleFetchAdvice} 
-                disabled={loadingAdvice} 
-                className={`${themeClasses.bg} ${themeClasses.bgHover} text-white p-4 rounded-2xl transition-all disabled:opacity-50 shadow-xl active:scale-90`}
-              >
-                <RefreshCw className={`w-7 h-7 ${loadingAdvice ? 'animate-spin' : ''}`} />
-              </button>
-            </div>
-            
-            {aiAdvice ? (
-              <div className="space-y-8 relative z-10 animate-fade-in">
-                <div className="bg-white/80 backdrop-blur-xl p-6 rounded-3xl border border-white/50 shadow-lg transition-transform hover:scale-[1.01]">
-                  <h4 className={`font-black ${themeClasses.textDark} text-xl mb-3`}>{aiAdvice.title}</h4>
-                  <p className="text-base text-slate-700 leading-relaxed font-medium italic">&ldquo;{aiAdvice.summary}&rdquo;</p>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                   <div className="space-y-4">
-                     <p className={`text-[10px] font-black ${themeClasses.accent} uppercase tracking-widest`}>Питание</p>
-                     {aiAdvice.nutritionTips.map((tip: string, i: number) => (
-                       <div key={i} className="flex gap-4 text-sm text-slate-700 bg-white/50 p-3 rounded-2xl border border-white/30 shadow-sm transition hover:bg-white/70">
-                         <div className={`min-w-3 h-3 rounded-full ${themeClasses.progress} mt-1.5 shadow-md`}></div>
-                         <span className="font-bold leading-tight">{tip}</span>
-                       </div>
-                     ))}
-                   </div>
-                   <div className="space-y-4">
-                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Тренировки</p>
-                     <div className="bg-white/50 p-5 rounded-3xl border border-white/30 shadow-sm">
-                       <p className="text-sm text-slate-800 font-bold leading-relaxed">{aiAdvice.activityTip}</p>
-                     </div>
-                     <div className={`mt-8 p-6 ${themeClasses.bg} text-white rounded-[2rem] text-base font-black shadow-2xl flex items-center gap-4 transition-transform hover:scale-[1.02]`}>
-                       <Trophy className="w-8 h-8 shrink-0 opacity-80" />
-                       <span className="text-sm leading-tight italic tracking-tight">{aiAdvice.motivationalQuote}</span>
-                     </div>
-                   </div>
-                </div>
-              </div>
-            ) : (
-              <div className="py-16 text-center bg-white/40 backdrop-blur-md rounded-[3rem] border-2 border-dashed border-slate-300">
-                <div className="w-20 h-20 bg-white/50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
-                   <Flame className={`w-10 h-10 ${themeClasses.accent}`} />
-                </div>
-                <p className="text-slate-600 font-black text-lg mb-8 max-w-sm mx-auto">Получите ваш персонализированный план питания и тренировок</p>
-                <button 
-                  onClick={handleFetchAdvice} 
-                  className={`inline-flex items-center gap-4 px-10 py-4 ${themeClasses.bg} text-white rounded-2xl font-black text-lg shadow-2xl transition active:scale-95 group shadow-indigo-100`}
-                >
-                  Сгенерировать план <ChevronRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
-                </button>
-              </div>
-            )}
-          </div>
         </section>
       </main>
 
